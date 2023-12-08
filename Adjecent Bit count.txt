@@ -1,0 +1,47 @@
+#include <bits/stdc++.h>  // Include the standard C++ library headers.
+using namespace std;       // Use the standard namespace.
+
+#define ll long long int  // Define an alias "ll" for "long long int".
+const ll M = 10000000007; // Define a constant "M" for modulo operations.
+ll n = 100;               // Declare and initialize a long long integer "n" with the value 100.
+ll k = 100;               // Declare and initialize a long long integer "k" with the value 100.
+
+int count() 
+{
+	int dp[n + 1][k + 1][2];  // Declare a 3D array "dp" with dimensions [n+1][k+1][2] to store DP values.
+	memset(dp, 0, sizeof(dp)); // Initialize all elements of "dp" to 0 using memset.
+
+	dp[1][0][0] = 1;  // Initialize dp[1][0][0] to 1.
+	dp[1][0][1] = 1;  // Initialize dp[1][0][1] to 1.
+
+	// Loop from i=2 to "n".
+	for (int i = 2; i <=n; i++) { 
+		// Loop from j=0 to "k".
+		for (int j = 0; j <=k; j++) { 
+			// Calculate dp[i][j][0] based on the previous values in dp.
+			dp[i][j][0] = ((dp[i - 1][j][0]%M) + (dp[i - 1][j][1]%M))%M; 
+			
+			// Calculate dp[i][j][1] based on the previous values in dp.
+			dp[i][j][1] = (dp[i - 1][j][0])%M; 
+			
+			// If j - 1 is greater than or equal to 0, update dp[i][j][1].
+			if (j - 1 >= 0)
+				dp[i][j][1] += (dp[i - 1][j - 1][1])%M; 
+		} 
+	} 
+
+	// Return the sum of dp[n][k][0] and dp[n][k][1], modulo M.
+	return ((dp[n][k][0]%M) + (dp[n][k][1]%M))%M; 
+} 
+
+int main() 
+{ 
+    ll  t;  // Declare a long long integer "t" to store the number of test cases.
+    cin>>t;  // Read the value of "t" from standard input.
+    while(t--)  // Start a loop that runs "t" times.
+    {
+        cin>>n>>k;       // Read values of "n" and "k" from standard input (overwriting the previously initialized values).
+        cout<<count()<<endl;  // Call the "count" function and print the result.
+    }
+	return 0;  // Return 0 to indicate successful program execution.
+}
